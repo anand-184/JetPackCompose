@@ -4,16 +4,24 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,8 +30,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,7 +51,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             JetPackComposeTheme{
-                ProfileCard()
+                Surface(modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background){
+                    imageAndbutton()
+
+                }
+
 
                 }
             }
@@ -48,6 +64,7 @@ class MainActivity : ComponentActivity() {
     }
 
 @Composable
+
 fun ProfileCard(){
     var outerBg by remember { mutableStateOf(Color.DarkGray) }
     Box(Modifier.fillMaxSize().padding(16.dp).background(outerBg)){
@@ -85,6 +102,74 @@ fun ProfileCard(){
         }
     }
 }
+@Composable
+fun alignAndarrange(){
+
+    /*
+    Row - Horizontal Arrangement and Vertical Alignment
+    Column- Vertical Arrangement and Horizontal Alignment
+    Box- Alignment
+     */
+
+    Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+
+        Text(text = "Row1")
+    }
+/*
+    Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+        Text(text = "Row2")
+    }
+    Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.Bottom){
+        Text(text = "Row3")
+    }
+    Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.Top){
+        Text(text = "Row4")
+    }
+    Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically){
+        Text(text = "Row5")
+    }
+    Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.Bottom){
+        Text(text = "Row6")
+    }
+    Row(horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.Top){
+        Text(text = "Row7")
+    }
+    Row(horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically){
+        Text(text = "Row8")
+    }
+    Row(horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.Bottom) {
+        Text(text = "Row9")
+    }
+    */
+}
+@Composable
+fun imageAndbutton() {
+    Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.SpaceEvenly) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Image(
+                painter = painterResource(id = R.drawable.splash_icon),
+                contentDescription = "Android",
+                modifier = Modifier.align(Alignment.TopStart)
+                    .border(width = 1.dp, color = Color.Black)
+                    .size(50.dp)
+            )
+                val context = LocalContext.current
+                Button(
+                    onClick = {
+                        Toast.makeText(
+                            context,
+                            "Welcome to JetPack Compose",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    modifier = Modifier.padding(start = 10.dp, end = 5.dp).align(Alignment.TopEnd)
+                ) {
+                    Text(text = "Click Me")
+                }
+        }
+    }
+}
+
 
 
 
@@ -93,7 +178,8 @@ fun ProfileCard(){
 @Composable
 fun GreetingPreview() {
     JetPackComposeTheme {
-        ProfileCard()
+        imageAndbutton()
+
     }
 }
 
