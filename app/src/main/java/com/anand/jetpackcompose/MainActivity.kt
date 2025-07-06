@@ -1,4 +1,6 @@
 package com.anand.jetpackcompose
+
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -8,31 +10,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -41,8 +30,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.anand.jetpackcompose.ui.theme.JetPackComposeTheme
-
+import kotlinx.coroutines.launch
+import screens.Home
+import screens.Profile
+import screens.Settings
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,21 +45,18 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         enableEdgeToEdge()
         setContent {
-            JetPackComposeTheme{
-                Surface(modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background){
-                    imageAndbutton()
-
-                }
-
-
+            JetPackComposeTheme {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    Sidenav()
                 }
             }
         }
     }
+}
 
-@Composable
 
+
+/*@Composable
 fun ProfileCard(){
     var outerBg by remember { mutableStateOf(Color.DarkGray) }
     Box(Modifier.fillMaxSize().padding(16.dp).background(outerBg)){
@@ -115,7 +107,6 @@ fun alignAndarrange(){
 
         Text(text = "Row1")
     }
-/*
     Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
         Text(text = "Row2")
     }
@@ -141,8 +132,8 @@ fun alignAndarrange(){
         Text(text = "Row9")
     }
     */
-}
-@Composable
+
+/*@Composable
 fun imageAndbutton() {
     Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.SpaceEvenly) {
         Box(modifier = Modifier.fillMaxWidth()) {
@@ -170,18 +161,146 @@ fun imageAndbutton() {
     }
 }
 
+*/
 
-
-
-
-@Preview(showBackground = true)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GreetingPreview() {
-    JetPackComposeTheme {
-        imageAndbutton()
+fun Sidenav() {
+    val context = LocalContext.current
+    val navigationController = rememberNavController()
+    val coroutineScope = rememberCoroutineScope()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        gesturesEnabled = true,
+        drawerContent = {
+            ModalDrawerSheet {
+                Box(
+                    Modifier
+                        .background(Color.Green)
+                        .fillMaxWidth()
+                        .height(100.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            Image(
+                                painter = painterResource(id = R.drawable.splash_icon),
+                                contentDescription = "Android",
+                                modifier = Modifier
+                                    .align(Alignment.CenterStart)
+                                    .size(100.dp)
+                            )
+                            Text(
+                                text = "Android X Compose",
+                                color = Color.Black,
+                                fontSize = 25.sp, // ✅ Corrected here
+                                modifier = Modifier
+                                    .padding( end = 10.dp)
+                                    .align(Alignment.CenterEnd)
+                            )
+                        }
+                    }
+                }
+
+
+                HorizontalDivider()
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Home", color = Color.Black) },
+                    selected = false,
+                    icon = { Icon(imageVector = Icons.Default.Home, contentDescription = "Home") },
+                    onClick = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                        }
+                        navigationController.navigate(Screens.Home.screen) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text(text = "Settings", color = Color.Black) },
+                    selected = false,
+                    icon = { Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings") },
+                    onClick = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                        }
+                        navigationController.navigate(Screens.Settings.screen) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text(text = "Profile", color = Color.Black) },
+                    selected = false,
+                    icon = { Icon(imageVector = Icons.Default.Person, contentDescription = "Profile") },
+                    onClick = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                        }
+                        navigationController.navigate(Screens.Profile.screen) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text(text = "Logout", color = Color.Black) },
+                    selected = false,
+                    icon = { Icon(imageVector = Icons.Filled.ExitToApp, contentDescription = "Logout") },
+                    onClick = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                        }
+                        Toast.makeText(context, "Logout", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(text = "JetPack Compose", color = Color.White) },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color(0xFF6200EE),
+                        titleContentColor = Color.White,
+                        navigationIconContentColor = Color.White,
+                        actionIconContentColor = Color.White
+                    ),
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            coroutineScope.launch {
+                                drawerState.open()
+                            }
+                        }) {
+                            Icon(imageVector = Icons.Rounded.Menu, contentDescription = "Menu")
+                        }
+                    }
+                )
+            }
+        ) {
+            NavHost(
+                navController = navigationController,
+                startDestination = Screens.Home.screen
+            ) {
+                composable(Screens.Home.screen) { Home() }
+                composable(Screens.Profile.screen) { Profile() }
+                composable(Screens.Settings.screen) { Settings() }
+            }
+        }
     }
 }
 
-
-
+@Preview(showBackground = true)
+@Composable
+fun LayoutPreview() {
+    JetPackComposeTheme {
+        Sidenav()
+    }
+}

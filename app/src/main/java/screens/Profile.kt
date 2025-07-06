@@ -9,13 +9,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.sp
-import com.anand.jetpackcompose.Screens
 
 @Composable
-fun Home(){
+fun Profile(){
     Box(Modifier.fillMaxSize().background(Color.LightGray), contentAlignment = Alignment.Center){
-        Text(text = "Home Screen",color = Color.Blue,fontSize = 30.sp, fontWeight = FontWeight.Bold)
+        Text(text = "Profile Screen",color = Color.Blue,fontSize = 30.sp, fontWeight = FontWeight.Bold)
     }
 }
