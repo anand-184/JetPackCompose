@@ -12,9 +12,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.*
@@ -35,8 +37,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.anand.jetpackcompose.ui.theme.JetPackComposeTheme
 import kotlinx.coroutines.launch
+import screens.Add
 import screens.Home
 import screens.Profile
+import screens.Search
 import screens.Settings
 
 class MainActivity : ComponentActivity() {
@@ -47,7 +51,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             JetPackComposeTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    Sidenav()
+                    bottomNav()
                 }
             }
         }
@@ -162,7 +166,7 @@ fun imageAndbutton() {
 }
 
 */
-
+/*
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -296,11 +300,90 @@ fun Sidenav() {
         }
     }
 }
+*/
+@Composable
+fun bottomNav(){
+    val navigationController = rememberNavController()
+    val context=LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val selectedItem = remember { mutableStateOf(Icons.Default.Home) }
+
+    Scaffold(
+        bottomBar={
+            BottomAppBar(containerColor = Color.Black) {
+                /*Item1 */
+
+                IconButton(onClick = {selectedItem.value=Icons.Default.Home
+                navigationController.navigate(Screens.Home.screen){ popUpTo(0) }
+                },modifier = Modifier.weight(1f)
+                ){
+                    Icon(Icons.Default.Home, contentDescription =null,modifier = Modifier.size(26.dp),
+                        tint = if(selectedItem.value == Icons.Default.Home) Color.White else Color.Gray)
+                }
+                /*Item 2 */
+
+                IconButton(onClick = {selectedItem.value=Icons.Default.Person
+                    navigationController.navigate(Screens.Profile.screen){ popUpTo(0) }
+                },modifier = Modifier.weight(1f)
+                ){
+                    Icon(Icons.Default.Person, contentDescription =null,modifier = Modifier.size(26.dp),
+                        tint = if(selectedItem.value == Icons.Default.Person) Color.White else Color.Gray)
+                }
+
+                /*Item3*/
+
+                Box(modifier = Modifier.weight(1f).padding(16.dp), contentAlignment = Alignment.Center) {
+                    FloatingActionButton(onClick = { navigationController.navigate(Screens.AddScreen.screen) {
+                            popUpTo(0) }
+                    })
+                    {
+                        Icon(Icons.Default.Add, contentDescription =null,modifier = Modifier.size(26.dp),
+                            tint = if(selectedItem.value == Icons.Default.Add) Color.White else Color.Gray)
+
+                    }
+
+                }
+
+                /*Item4*/
+
+                IconButton(onClick = {selectedItem.value=Icons.Default.Settings
+                    navigationController.navigate(Screens.Settings.screen){ popUpTo(0) }
+                },modifier = Modifier.weight(1f)
+                ){
+                    Icon(Icons.Default.Settings, contentDescription =null,modifier = Modifier.size(26.dp),
+                        tint = if(selectedItem.value == Icons.Default.Settings) Color.White else Color.Gray)
+                }
+
+                /*Item5*/
+
+                IconButton(onClick = {selectedItem.value=Icons.Default.Search
+                    navigationController.navigate(Screens.Search.screen){ popUpTo(0) }
+                },modifier = Modifier.weight(1f)
+                ){
+                    Icon(Icons.Default.Search, contentDescription =null,modifier = Modifier.size(26.dp),
+                        tint = if(selectedItem.value == Icons.Default.Search) Color.White else Color.Gray)
+                }
+
+            }
+        }
+    ){paddingValues ->
+        NavHost(navController = navigationController, startDestination = Screens.Home.screen, modifier = Modifier.padding(paddingValues)){
+            composable(Screens.Home.screen){ Home() }
+            composable(Screens.Profile.screen){ Profile() }
+            composable(Screens.Settings.screen){ Settings() }
+            composable(Screens.AddScreen.screen){ Add() }
+            composable(Screens.Search.screen){Search() }
+        }
+
+    }
+
+
+}
 
 @Preview(showBackground = true)
 @Composable
 fun LayoutPreview() {
     JetPackComposeTheme {
-        Sidenav()
+        bottomNav()
     }
 }
