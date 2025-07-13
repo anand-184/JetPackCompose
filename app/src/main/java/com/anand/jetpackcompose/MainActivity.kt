@@ -1,6 +1,7 @@
 package com.anand.jetpackcompose
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -13,21 +14,26 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,12 +52,11 @@ import screens.Settings
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen()
         enableEdgeToEdge()
         setContent {
             JetPackComposeTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    bottomNav()
+                    SideBotNavSheet()
                 }
             }
         }
@@ -165,8 +170,8 @@ fun imageAndbutton() {
     }
 }
 
-*/
-/*
+
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -300,13 +305,18 @@ fun Sidenav() {
         }
     }
 }
-*/
+
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun bottomNav(){
     val navigationController = rememberNavController()
     val context=LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val selectedItem = remember { mutableStateOf(Icons.Default.Home) }
+    var sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember{ mutableStateOf(false) }
+
 
     Scaffold(
         bottomBar={
@@ -333,9 +343,7 @@ fun bottomNav(){
                 /*Item3*/
 
                 Box(modifier = Modifier.weight(1f).padding(16.dp), contentAlignment = Alignment.Center) {
-                    FloatingActionButton(onClick = { navigationController.navigate(Screens.AddScreen.screen) {
-                            popUpTo(0) }
-                    })
+                    FloatingActionButton(onClick = { showBottomSheet=true })
                     {
                         Icon(Icons.Default.Add, contentDescription =null,modifier = Modifier.size(26.dp),
                             tint = if(selectedItem.value == Icons.Default.Add) Color.White else Color.Gray)
@@ -377,13 +385,338 @@ fun bottomNav(){
 
     }
 
+    if(showBottomSheet) {
+
+        ModalBottomSheet(onDismissRequest = { showBottomSheet = false }, sheetState = sheetState,containerColor = Color.White) {
+
+            Column(modifier = Modifier.fillMaxSize().padding(18.dp),verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                bottomSheetItem(icon = Icons.Default.Favorite,
+                    title = "Favourites",
+                    onClick = {Toast.makeText(context,"Added to Favourites",Toast.LENGTH_SHORT).show()
+                    showBottomSheet=false
+                    }
+                )
+
+                bottomSheetItem(icon = Icons.Default.DateRange,
+                    title = "Watch Later",
+                    onClick = {Toast.makeText(context,"Added to Watch Later",Toast.LENGTH_SHORT).show()
+                        showBottomSheet=false
+                    }
+                )
+
+                bottomSheetItem(icon=Icons.Default.ThumbUp,
+                    title = "Liked",
+                    onClick = {Toast.makeText(context,"Added to Liked",Toast.LENGTH_SHORT).show()
+                    showBottomSheet=false}
+
+                )
+
+
+            }
+
+
+        }
+
+    }
 
 }
 
+@Composable
+fun bottomSheetItem(icon:ImageVector,title:String,onClick:()->Unit){
+
+    Row(verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(20.dp), modifier = Modifier.clickable { onClick() }){
+
+        Icon(imageVector = icon, contentDescription = null, tint = Color.Black)
+        Text(text=title,fontSize = 18.sp, color = Color.Black)
+    }
+
+}
+
+ */
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SideBotNavSheet() {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val navigationController = rememberNavController()
+    var selectedItem = remember { mutableStateOf(Icons.Default.Home) }
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
+
+    /*Side Drawer*/
+
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        gesturesEnabled = true,
+        drawerContent = {
+            ModalDrawerSheet {
+                Box(
+                    Modifier
+                        .background(Color.Green)
+                        .fillMaxWidth()
+                        .height(100.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            Image(
+                                painter = painterResource(id = R.drawable.splash_icon),
+                                contentDescription = "Android",
+                                modifier = Modifier
+                                    .align(Alignment.CenterStart)
+                                    .size(100.dp)
+                            )
+                            Text(
+                                text = "Android X Compose",
+                                color = Color.Black,
+                                fontSize = 25.sp, // ✅ Corrected here
+                                modifier = Modifier
+                                    .padding(end = 10.dp)
+                                    .align(Alignment.CenterEnd)
+                            )
+                        }
+                    }
+                }
+
+
+                HorizontalDivider()
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Home", color = Color.Black) },
+                    selected = false,
+                    icon = { Icon(imageVector = Icons.Default.Home, contentDescription = "Home") },
+                    onClick = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                        }
+                        navigationController.navigate(Screens.Home.screen) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text(text = "Settings", color = Color.Black) },
+                    selected = false,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings"
+                        )
+                    },
+                    onClick = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                        }
+                        navigationController.navigate(Screens.Settings.screen) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text(text = "Profile", color = Color.Black) },
+                    selected = false,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Profile"
+                        )
+                    },
+                    onClick = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                        }
+                        navigationController.navigate(Screens.Profile.screen) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text(text = "Logout", color = Color.Black) },
+                    selected = false,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.ExitToApp,
+                            contentDescription = "Logout"
+                        )
+                    },
+                    onClick = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                        }
+                        Toast.makeText(context, "Logout", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(text = "JetPack Compose", color = Color.White) },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color(0xFF6200EE),
+                        titleContentColor = Color.White,
+                        navigationIconContentColor = Color.White,
+                        actionIconContentColor = Color.White
+                    ),
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            coroutineScope.launch {
+                                drawerState.open()
+                            }
+                        }) {
+                            Icon(imageVector = Icons.Rounded.Menu, contentDescription = "Menu")
+                        }
+                    }
+                )
+            },
+            bottomBar = {
+                BottomAppBar(containerColor = Color.Black) {
+                    IconButton(onClick = {
+                        selectedItem.value = Icons.Default.Home
+                        navigationController.navigate(Screens.Home.screen) {
+                            popUpTo(0)
+                        }
+                    }, modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Home,
+                            contentDescription = null,
+                            modifier = Modifier.size(26.dp),
+                            tint = if (selectedItem.value == Icons.Default.Home) Color.White else Color.Gray
+                        )
+                    }
+
+                    IconButton(onClick = {
+                        selectedItem.value = Icons.Default.Person
+                        navigationController.navigate(Screens.Profile.screen) {
+                            popUpTo(0)
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = null,
+                            modifier = Modifier.size(26.dp),
+                            tint = if (selectedItem.value == Icons.Default.Person) Color.White else Color.Gray
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier.weight(1f).padding(0.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        FloatingActionButton(onClick = { showBottomSheet = true })
+                        {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null,
+                                modifier = Modifier.size(26.dp),
+                                tint = if (selectedItem.value == Icons.Default.Add) Color.White else Color.Gray
+                            )
+                        }
+                    }
+
+                    IconButton(onClick = {
+                        selectedItem.value = Icons.Default.Settings
+                        navigationController.navigate(Screens.Settings.screen) {
+                            popUpTo(0)
+                        }
+                    }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = null,
+                            modifier = Modifier.size(26.dp),
+                            tint = if (selectedItem.value == Icons.Default.Settings) Color.White else Color.Gray
+                        )
+                    }
+
+                    IconButton(onClick = {
+                        selectedItem.value = Icons.Default.Search
+                        navigationController.navigate(Screens.Search.screen) {
+                            popUpTo(0)
+                        }
+                    }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null,
+                            modifier = Modifier.size(26.dp),
+                            tint = if (selectedItem.value == Icons.Default.Search) Color.White else Color.Gray
+                        )
+                    }
+
+                }
+            }
+        ) {
+            NavHost(
+                startDestination = Screens.Home.screen,
+                navController = navigationController,
+                modifier = Modifier.padding(it)
+            ) {
+                composable(Screens.Home.screen) { Home() }
+                composable(Screens.Profile.screen) { Profile() }
+                composable(Screens.Settings.screen) { Settings() }
+                composable(Screens.Search.screen) { Search() }
+                composable(Screens.AddScreen.screen) { Add() }
+            }
+
+        }
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showBottomSheet = false },
+                sheetState = sheetState,
+                containerColor = Color.White
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    BottomSheetItem(
+                        icon = Icons.Default.Favorite,
+                        title = "Favourites",
+                        onClick = {
+                            showBottomSheet=false
+                            Toast.makeText(context, "Added to Favourites", Toast.LENGTH_SHORT).show()}
+                    )
+                    BottomSheetItem(icon = Icons.Default.DateRange,
+                        title = "Watch Later",
+                        onClick = {
+                            showBottomSheet=false
+                            Toast.makeText(context, "Added to Watch Later", Toast.LENGTH_SHORT).show()}
+                    )
+                    BottomSheetItem(icon = Icons.Default.ThumbUp,
+                        title = "Liked",
+                        onClick = {
+                            showBottomSheet = false
+                            Toast.makeText(context, "Added to Liked", Toast.LENGTH_SHORT).show()}
+                    )
+
+                }
+            }
+        }
+    }
+}
+@Composable
+fun BottomSheetItem(icon: ImageVector, title: String, onClick: () -> Unit){
+    Row(verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        modifier = Modifier.clickable { onClick() }) {
+        Icon(imageVector = icon, contentDescription = null, tint = Color.Black)
+        Text(text = title, fontSize = 18.sp, color = Color.Black)
+    }
+
+}
 @Preview(showBackground = true)
 @Composable
 fun LayoutPreview() {
     JetPackComposeTheme {
-        bottomNav()
+        SideBotNavSheet()
     }
 }

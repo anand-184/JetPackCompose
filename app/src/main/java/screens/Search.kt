@@ -14,6 +14,6 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun Search(){
     Box(Modifier.fillMaxSize().background(Color.LightGray), contentAlignment = Alignment.Center){
-        Text(text = "Home Screen",color = Color.Blue,fontSize = 30.sp, fontWeight = FontWeight.Bold)
+        Text(text = "Search Screen",color = Color.Blue,fontSize = 30.sp, fontWeight = FontWeight.Bold)
     }
 }
