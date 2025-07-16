@@ -60,7 +60,7 @@ fun JetPackComposeTheme(
     SideEffect {
         val window = (view.context as Activity).window
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        window.statusBarColor = Color.Green.toArgb()
+        window.statusBarColor = Color.Blue.toArgb()
     }
 
 

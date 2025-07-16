@@ -38,6 +38,13 @@ android {
         compose = true
         viewBinding = true
     }
+
+}
+configurations.all {
+    resolutionStrategy {
+        force("com.google.auto.value:auto-value:1.6.3")
+        force("com.google.auto.value:auto-value-annotations:1.6.3")
+    }
 }
 
 dependencies {
@@ -56,6 +63,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    //implementation(libs.androidx.room.compiler.processing.testing)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -67,4 +75,6 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.0")
 
     implementation("androidx.navigation:navigation-compose:2.9.1")
+
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 }
