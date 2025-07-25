@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services") version "4.4.3" apply false
+
 }
 
 android {
@@ -63,6 +65,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.firebase.auth.ktx)
     //implementation(libs.androidx.room.compiler.processing.testing)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -77,4 +80,15 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.9.1")
 
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.2")
+    implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
+    implementation("com.google.firebase:firebase-analytics")
+
+    implementation ("com.google.firebase:firebase-database-ktx:20.3.1")
+
+
+
+
 }
+apply(plugin = "com.google.gms.google-services")
